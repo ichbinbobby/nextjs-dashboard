@@ -5,11 +5,17 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Set current page after hydration to avoid mismatch
+  useEffect(() => {
+    setCurrentPage(Number(searchParams.get('page')) || 1);
+  }, [searchParams]);
   // NOTE: Uncomment this code in Chapter 11
 
   const createPageURL = (pageNumber: number | string) => {
